@@ -1,6 +1,7 @@
-from PyQt6.QtCore import Qt, QObject, QPointF, QLineF
+from PyQt6.QtCore import Qt, QObject, QPointF, QLineF, QTimer
 from PyQt6.QtWidgets import QGraphicsPixmapItem, QGraphicsPolygonItem
 from PyQt6.QtGui import QPixmap, QPolygonF, QColor
+from bullet import Bullet
 import res
 
 class Tower(QGraphicsPixmapItem, QObject):
@@ -8,6 +9,8 @@ class Tower(QGraphicsPixmapItem, QObject):
         super().__init__(parent)
 
         self.setPixmap(QPixmap(":/images/images/provisional_tower.png").scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio))
+        self.attack_dest = (QPointF(100, 100))
+        self.timer = QTimer()
 
         # create a polygon from these points
         polygon = QPolygonF()
@@ -26,6 +29,21 @@ class Tower(QGraphicsPixmapItem, QObject):
         poly_center = QPointF(1.5, 1.5)
         poly_center *= scale_factor
         poly_center = self.mapToScene(poly_center)
-        tower_center = QPointF(self.pixmap().width() / 2, self.pixmap().height() / 2)
-        delta = QLineF(poly_center, tower_center)
+        delta = QLineF(poly_center, self.findXYCenter())
         attack_area.setPos(attack_area.x() + delta.dx(), attack_area.y() + delta.dy())
+
+        # connect a timer to attack_target
+        self.timer.timeout.connect(self.attackTarget)
+        self.timer.start(1500)
+
+    def attackTarget(self):
+        bullet = Bullet(self)
+        bullet.setPos(self.findXYCenter())
+
+        line = QLineF(self.findXYCenter(), self.attack_dest)
+        angle = -1 * line.angle()
+
+        bullet.setRotation(angle)
+
+    def findXYCenter(self):
+        return QPointF(self.pixmap().width() / 2, self.pixmap().height() / 2)

@@ -11,13 +11,14 @@ class Game(QGraphicsView):
 
         # create a scene
         self.gamescene = QGraphicsScene(self)
-        self.setSceneRect(0, 0, 800, 600)
+        self.gamescene.setSceneRect(0, 0, 800, 600)
 
         # set the scene
         self.setScene(self.gamescene)
 
         # create a tower
         tower = Tower()
+        tower.setPos(self.gamescene.width() / 2 - tower.findXYCenter().x(), self.gamescene.height() / 2 - tower.findXYCenter().y())
 
         # add tower to the scene
         self.gamescene.addItem(tower)

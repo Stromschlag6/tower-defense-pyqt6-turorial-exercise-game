@@ -5,8 +5,8 @@ from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
 import math
 
 class Bullet(QGraphicsPixmapItem, QObject):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent = None):
+        super().__init__(parent)
 
         self.setPixmap(QPixmap(":/images/images/laser_shot.png").scaled(50, 50, Qt.AspectRatioMode.KeepAspectRatio))
 
