@@ -1,6 +1,7 @@
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QGraphicsPixmapItem, QGraphicsPolygonItem
 from PyQt6.QtGui import QPixmap
+import res
 
 class Tower(QGraphicsPixmapItem, QObject):
     def __init__(self, parent = None):

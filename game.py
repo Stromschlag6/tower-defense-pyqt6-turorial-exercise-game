@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QGraphicsScene, QGraphicsView
+from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView
 from tower import Tower
 
 
