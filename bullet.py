@@ -7,7 +7,7 @@ class Bullet(QGraphicsPixmapItem, QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self.setPixmap(QPixmap(":/images/images/laser_shot.png").scaled(50, 50, Qt.AspectRatioMode.KeepAspectRatio))
+        self.setPixmap(QPixmap(":/images/images/laser_shot.png").scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio))
 
         self.timer = QTimer()
 

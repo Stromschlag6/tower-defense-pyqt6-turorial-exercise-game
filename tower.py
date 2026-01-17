@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt, QObject, QPointF, QLineF, QTimer
 from PyQt6.QtWidgets import QGraphicsPixmapItem, QGraphicsPolygonItem
-from PyQt6.QtGui import QPixmap, QPolygonF
+from PyQt6.QtGui import QPixmap, QPolygonF, QPen
 from bullet import Bullet
 from enemy import Enemy
 import res
@@ -9,7 +9,7 @@ class Tower(QGraphicsPixmapItem, QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self.setPixmap(QPixmap(":/images/images/provisional_tower_maybe_not_centered.png").scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio))
+        self.setPixmap(QPixmap(":/images/images/basic_tower.png").scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio))
         self.attack_dest = QPointF()
         self.timer = QTimer()
 
@@ -24,6 +24,7 @@ class Tower(QGraphicsPixmapItem, QObject):
 
         # create the QGraphicsPolygonItem
         self.attack_area = QGraphicsPolygonItem(polygon, self)
+        self.attack_area.setPen(QPen(Qt.PenStyle.DotLine))
 
         # move the polygon
         # TODO Potential problem with coordinates because of potential differentiating origins(scene, polygon or polygon item)
@@ -40,8 +41,11 @@ class Tower(QGraphicsPixmapItem, QObject):
         self.timer.start(1500)
 
     def fire(self):
+        # Reference given probably working out of luck
         bullet = Bullet(self)
         bullet.setPos(self.findXYCenter().x() - bullet.pixmap().width() / 2, self.findXYCenter().y() - bullet.pixmap().height() / 2)
+        bullet.setTransformOriginPoint(bullet.pixmap().width() / 2, bullet.pixmap().height() / 2) # rotation was the problem of not centered bullet
+
         
         """ TODO As soon as enemy within game possible solution with coords -> game as towers parent, therefore tower should be able to acces enemys position(probably created by game) and
         then set self.attack_dest = self.mapToScene(game.enemy)"""
@@ -54,26 +58,21 @@ class Tower(QGraphicsPixmapItem, QObject):
         # get a list of all items colliding with attack_area
         colliding_items = self.attack_area.collidingItems()
 
-        if len(colliding_items) == 1:
-            self.has_target = False
-
-            return
-
         closest_dist = 400
-        closest_point = QPointF(0, 0)
-        print(self.attack_dest)
+        closest_point = None
 
+        # all positions are being aimad at top left of respective objects, need to be centered
         for object in colliding_items:
             if type(object) == Enemy:
                 this_distance = self.distanceTo(object)
                 if this_distance < closest_dist:
                     closest_dist = this_distance
-                    closest_point = object.pos()
+                    closest_point = QPointF(object.pos().x() + object.pixmap().width() / 2, object.pos().y() + object.pixmap().height() / 2)
                     self.has_target = True
+                    self.attack_dest = self.mapFromScene(closest_point)
+                
+                self.fire()
         
-        self.attack_dest = self.mapFromScene(closest_point)
-        self.fire()
-
     def findXYCenter(self):
         return QPointF(self.pixmap().width() / 2, self.pixmap().height() / 2)
     

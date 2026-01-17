@@ -11,7 +11,7 @@ class Enemy(QGraphicsPixmapItem, QObject): # wrong order endes in weird bug, why
         self.setPixmap(QPixmap(":/images/images/enemy.png").scaled(50, 50, Qt.AspectRatioMode.KeepAspectRatio))
 
         # set points
-        self.points = [QPointF(200, 200), QPointF(400, 150), QPointF(500, 300)]
+        self.points = [QPointF(200, 200), QPointF(300, 300), QPointF(600, 300)]
         self.point_index = 0
         self.dest = self.points[self.point_index]
 
@@ -23,13 +23,15 @@ class Enemy(QGraphicsPixmapItem, QObject): # wrong order endes in weird bug, why
         
     # move enemy forward at current angle
     def move_forward(self):
+        if self.dest == self.points[2]:
+            return
         # if close enough to dest, go to next dest
         line = QLineF(self.pos(), self.dest)
-        if line.length() < 5 and len(self.points) > self.point_index:
+        if line.length() < 5 and len(self.points) - 1 > self.point_index:
             self.point_index += 1
             self.dest = self.points[self.point_index]
 
-        step_size = 20
+        step_size = 2
         # angle = self.rotation() # degrees # move enemy forward at current angle
         angle = -1 * line.angle()
         radians = math.radians(angle)
