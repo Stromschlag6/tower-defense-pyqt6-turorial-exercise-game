@@ -13,6 +13,7 @@ class Enemy(QObject, QGraphicsPixmapItem):
         self.points = []
         self.points.append(self.mapToScene(self.setPointPos(QPointF(), 50, 50)))
         self.points.append(self.mapToScene(self.setPointPos(QPointF(), 100, 70)))
+        self.points.append(self.mapToScene(self.setPointPos(QPointF(), 100, 70)))
         self.dest = QPointF()
         self.point_index = None
 
