@@ -1,7 +1,6 @@
-from PyQt6.QtCore import Qt, QObject, QTimer, QUrl
+from PyQt6.QtCore import Qt, QObject, QTimer
 from PyQt6.QtWidgets import QGraphicsPixmapItem
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
 import math
 
 class Bullet(QGraphicsPixmapItem, QObject):

@@ -9,7 +9,7 @@ class Tower(QGraphicsPixmapItem, QObject):
         super().__init__(parent)
 
         self.setPixmap(QPixmap(":/images/images/provisional_tower_maybe_not_centered.png").scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio))
-        self.attack_dest = QPointF()
+        self.attack_dest = QPointF(-360, -260)
         self.timer = QTimer()
 
         # create a polygon from these points
