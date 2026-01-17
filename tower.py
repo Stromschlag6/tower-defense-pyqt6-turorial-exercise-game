@@ -8,8 +8,8 @@ import res
 class Tower(QGraphicsPixmapItem, QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
-
-        #self.setPixmap(QPixmap(":/images/images/basic_tower.png").scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio))
+        # polygon position is dependent on pixmap sizeh(here scaled to 80) -> all towers inheriting from this class are required to have a pixmap the size of 80
+        self.setPixmap(QPixmap(":/images/images/basic_tower.png").scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio))
 
         self.attack_dest = QPointF()
         self.timer = QTimer()
@@ -28,15 +28,11 @@ class Tower(QGraphicsPixmapItem, QObject):
         self.attack_area.setPen(QPen(Qt.PenStyle.DotLine))
 
         # move the polygon
-        # TODO Potential problem with coordinates because of potential differentiating origins(scene, polygon or polygon item)
         poly_center = QPointF(1.5, 1.5)
         poly_center *= scale_factor
         poly_center = self.mapToScene(poly_center)
         delta = QLineF(poly_center, self.findXYCenter())
-        self.attack_area.setPos(self.attack_area.x() + delta.dx(), self.attack_area.y() + delta.dy()) # TODO position set before tower placed(made visible), question: why polygon near tower then?
-        # probably because not centered right, will have to look into it
-
-        print(f"poly_center:{poly_center} tower center:{self.findXYCenter()}")
+        self.attack_area.setPos(self.attack_area.x() + delta.dx(), self.attack_area.y() + delta.dy()) 
 
         self.has_target = False
 
