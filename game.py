@@ -1,3 +1,4 @@
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView
 from tower import Tower
 
@@ -8,6 +9,7 @@ class Game(QGraphicsView):
 
         # create a scene
         self.gamescene = QGraphicsScene(self)
+        self.setSceneRect(0, 0, 800, 600)
 
         # set the scene
         self.setScene(self.gamescene)
@@ -17,4 +19,9 @@ class Game(QGraphicsView):
 
         # add tower to the scene
         self.gamescene.addItem(tower)
+
+        self.setFixedSize(800, 600)
+
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
