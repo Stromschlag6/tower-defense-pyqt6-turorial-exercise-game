@@ -2,5 +2,6 @@
     <qresource prefix="/images" >
         <file>images/provisional_tower_maybe_not_centered.png</file>
         <file>images/laser_shot.png</file>
+        <file>images/enemy_cut_out.png</file>
     </qresource>
 </RCC>
