@@ -1,10 +1,10 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QGraphicsPixmapItem, QGraphicsSceneMouseEvent
+from PyQt6.QtWidgets import QGraphicsPixmapItem
 from PyQt6.QtGui import QPixmap
-from tower import Tower
+from basic_tower import BasicTower
 
 
-class BuildTowerIcon(QGraphicsPixmapItem):
+class BuildBasicTowerIcon(QGraphicsPixmapItem):
     def __init__(self, game = None, parent = None):
         super().__init__(parent)
 
@@ -15,6 +15,6 @@ class BuildTowerIcon(QGraphicsPixmapItem):
 
     def mousePressEvent(self, event):
         if not self.game.build:
-            self.game.build = Tower()
+            self.game.build = BasicTower()
             self.game.setCursor(":/images/images/basic_tower.png")
 

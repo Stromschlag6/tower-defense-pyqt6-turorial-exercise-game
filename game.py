@@ -1,10 +1,10 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsPixmapItem
-from PyQt6.QtGui import QMouseEvent, QPixmap, QBrush
+from PyQt6.QtGui import QPixmap
 from tower import Tower
-from bullet import Bullet
 from enemy import Enemy
-from build_tower_icon import BuildTowerIcon
+from build_basic_tower_icon import BuildBasicTowerIcon
+from build_rocket_tower_icon import BuildRocketTowerIcon
 
 
 class Game(QGraphicsView):
@@ -25,17 +25,14 @@ class Game(QGraphicsView):
         self.setMouseTracking(True)
 
         # build tower buttons
+        button_space = 10
         self.build = None
-        self.build_tower_icon = BuildTowerIcon(self)
-        self.gamescene.addItem(self.build_tower_icon)        
+        self.build_basic_tower_icon = BuildBasicTowerIcon(self)
+        self.gamescene.addItem(self.build_basic_tower_icon)
 
-        # create a tower
-        tower = Tower()
-        tower.setPos(self.gamescene.width() / 2 - tower.findXYCenter().x(), self.gamescene.height() / 2 - tower.findXYCenter().y())
-
-        # add tower to the scene
-        self.gamescene.addItem(tower)
-
+        self.build_rocket_tower_icon = BuildRocketTowerIcon(self)
+        self.build_rocket_tower_icon.setPos(0, self.build_basic_tower_icon.boundingRect().height() + button_space)
+        self.gamescene.addItem(self.build_rocket_tower_icon)
 
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
@@ -44,10 +41,15 @@ class Game(QGraphicsView):
         enemy = Enemy()
         self.gamescene.addItem(enemy)
 
+        # test code
+        """ tower = Tower()
+        tower.setPos(210, 410)
+        self.gamescene.addItem(tower) """
+
     def mousePressEvent(self, event):
         if not self.build == None:
             for item in self.cursor.collidingItems():
-                if type(item) == Tower:
+                if isinstance(item, Tower):
                     return print("space already used")
                 
             self.build.setPos(event.pos().toPointF().x() - self.build.boundingRect().width() / 2, event.pos().toPointF().y() - self.build.boundingRect().height() / 2)

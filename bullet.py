@@ -8,6 +8,8 @@ class Bullet(QGraphicsPixmapItem, QObject):
         super().__init__(parent)
 
         self.setPixmap(QPixmap(":/images/images/laser_shot.png").scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio))
+        self.max_range = 200
+        self.distance_traveled = 0
 
         self.timer = QTimer()
 
@@ -21,3 +23,15 @@ class Bullet(QGraphicsPixmapItem, QObject):
         dx = step_size * math.cos(radians)
         dy = step_size * math.sin(radians)
         self.setPos(self.pos().x() + dx, self.pos().y() + dy)
+
+    def getMaxRange(self):
+        return self.max_range
+    
+    def getDistanceTraveled (self):
+        return self.distance_traveled
+    
+    def setMaxRange(self, value):
+        self.max_range = value
+
+    def setDistanceTraveled(self, value):
+        self.distance_traveled = value

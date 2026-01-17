@@ -4,5 +4,8 @@
         <file>images/laser_shot.png</file>
         <file>images/enemy.png</file>
         <file>images/basic_tower_build_icon.png</file>
+        <file>images/rocket_tower.png</file>
+        <file>images/rocket_tower_build_icon.png</file>
+        <file>images/missile.png</file>
     </qresource>
 </RCC>
