@@ -18,7 +18,3 @@ class BuildTowerIcon(QGraphicsPixmapItem):
             self.game.build = Tower()
             self.game.setCursor(":/images/images/basic_tower.png")
 
-    # quit build mode with escape key
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key.Key_Escape:
-            pass

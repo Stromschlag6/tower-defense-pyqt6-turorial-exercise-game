@@ -46,6 +46,10 @@ class Game(QGraphicsView):
 
     def mousePressEvent(self, event):
         if not self.build == None:
+            for item in self.cursor.collidingItems():
+                if type(item) == Tower:
+                    return print("space already used")
+                
             self.build.setPos(event.pos().toPointF().x() - self.build.boundingRect().width() / 2, event.pos().toPointF().y() - self.build.boundingRect().height() / 2)
             self.gamescene.addItem(self.build)
             self.build = None
