@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/images" >
-        <file>images/provisional_tower.png</file>
+        <file>images/provisional_tower_maybe_not_centered.png</file>
         <file>images/laser_shot.png</file>
     </qresource>
 </RCC>
