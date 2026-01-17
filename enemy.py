@@ -1,6 +1,7 @@
-from PyQt6.QtCore import Qt, QObject, QPointF
+from PyQt6.QtCore import Qt, QObject, QPointF, QTimer, QLineF
 from PyQt6.QtWidgets import QGraphicsPixmapItem
 from PyQt6.QtGui import QPixmap
+import math
 
 class Enemy(QObject, QGraphicsPixmapItem):
     def __init__(self, parent = None):
@@ -10,21 +11,43 @@ class Enemy(QObject, QGraphicsPixmapItem):
         self.setPixmap(QPixmap(":/images/images/enemy_cut_out.png"))
 
         # set points
-        self.points = []
-        self.points.append(self.mapToScene(self.setPointPos(QPointF(), 50, 50)))
-        self.points.append(self.mapToScene(self.setPointPos(QPointF(), 100, 70)))
-        self.points.append(self.mapToScene(self.setPointPos(QPointF(), 100, 70)))
-        self.dest = QPointF()
-        self.point_index = None
+        self.points = [QPointF(), QPointF(), QPointF()]
 
+        for point in self.points:
+            self.mapToScene(point)
+
+        self.points[0].setPointPos(50, 50)
+        self.points[1].setPointPos(100, 70)
+        self.points[2].setPointPos(150, 450)
+        
+        self.point_index = 0
+
+        self.dest = self.points[self.point_index]
+
+        # connect timer to move_forward
+        self.timer = QTimer()
+
+        self.timer.timeout.connect(self.move_forward)
+        self.timer.start(150)
+        
+    # move enemy forward at current angle
     def move_forward(self):
-        pass
+        step_size = 30
+        angle = self.rotation() # degrees
+        radians = math.radians(angle)
+        dx = step_size * math.cos(radians)
+        dy = step_size * math.sin(radians)
+
+        self.setPos(self.pos().x() + dx, self.pos().y() + dy)
 
     def rotateToPoint(self, point):
-        pass
+        line = QLineF(self.pos(), point)
+        angle = -1 * line.angle()
 
-    def setPointPos(self, point, x, y):
-        point.setX(x)
-        point.setY(y)
+        self.setRotation(angle)
 
-        return point
+    def setPointPos(self, x, y):
+        self.setX(x)
+        self.setY(y)
+
+        return self

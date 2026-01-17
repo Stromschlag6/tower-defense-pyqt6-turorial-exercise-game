@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView
 from PyQt6.QtGui import QMouseEvent
 from tower import Tower
 from bullet import Bullet
+from enemy import Enemy
 
 
 class Game(QGraphicsView):
@@ -27,6 +28,10 @@ class Game(QGraphicsView):
 
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
+        # create enemy
+        enemy = Enemy()
+        self.gamescene.addItem(enemy)
 
     def mousePressEvent(self, event):
         bullet = Bullet()
