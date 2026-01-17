@@ -2,6 +2,7 @@ from PyQt6.QtCore import Qt, QObject, QPointF, QLineF, QTimer
 from PyQt6.QtWidgets import QGraphicsPixmapItem, QGraphicsPolygonItem
 from PyQt6.QtGui import QPixmap, QPolygonF
 from bullet import Bullet
+from enemy import Enemy
 import res
 
 class Tower(QGraphicsPixmapItem, QObject):
@@ -9,7 +10,7 @@ class Tower(QGraphicsPixmapItem, QObject):
         super().__init__(parent)
 
         self.setPixmap(QPixmap(":/images/images/provisional_tower_maybe_not_centered.png").scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio))
-        self.attack_dest = QPointF(-360, -260)
+        self.attack_dest = QPointF()
         self.timer = QTimer()
 
         # create a polygon from these points
@@ -17,12 +18,12 @@ class Tower(QGraphicsPixmapItem, QObject):
         polygon << QPointF(1,0) << QPointF(2,0) << QPointF(3,1) << QPointF(3,2) << QPointF(2,3) << QPointF(1,3) << QPointF(0,2) << QPointF(0,1)
 
         # scale points
-        scale_factor = 60
+        scale_factor = 80
         for point in polygon:
             point *= scale_factor
 
         # create the QGraphicsPolygonItem
-        attack_area = QGraphicsPolygonItem(polygon, self)
+        self.attack_area = QGraphicsPolygonItem(polygon, self)
 
         # move the polygon
         # TODO Potential problem with coordinates because of potential differentiating origins(scene, polygon or polygon item)
@@ -30,13 +31,15 @@ class Tower(QGraphicsPixmapItem, QObject):
         poly_center *= scale_factor
         poly_center = self.mapToScene(poly_center)
         delta = QLineF(poly_center, self.findXYCenter())
-        attack_area.setPos(attack_area.x() + delta.dx(), attack_area.y() + delta.dy())
+        self.attack_area.setPos(self.attack_area.x() + delta.dx(), self.attack_area.y() + delta.dy())
+
+        self.has_target = False
 
         # connect a timer to attack_target
-        self.timer.timeout.connect(self.attackTarget)
+        self.timer.timeout.connect(self.aquireTarget)
         self.timer.start(1500)
 
-    def attackTarget(self):
+    def fire(self):
         bullet = Bullet(self)
         bullet.setPos(self.findXYCenter().x() - bullet.pixmap().width() / 2, self.findXYCenter().y() - bullet.pixmap().height() / 2)
         
@@ -47,5 +50,34 @@ class Tower(QGraphicsPixmapItem, QObject):
 
         bullet.setRotation(angle)
 
+    def aquireTarget(self):
+        # get a list of all items colliding with attack_area
+        colliding_items = self.attack_area.collidingItems()
+
+        if len(colliding_items) == 1:
+            self.has_target = False
+
+            return
+
+        closest_dist = 400
+        closest_point = QPointF(0, 0)
+        print(self.attack_dest)
+
+        for object in colliding_items:
+            if type(object) == Enemy:
+                this_distance = self.distanceTo(object)
+                if this_distance < closest_dist:
+                    closest_dist = this_distance
+                    closest_point = object.pos()
+                    self.has_target = True
+        
+        self.attack_dest = self.mapFromScene(closest_point)
+        self.fire()
+
     def findXYCenter(self):
         return QPointF(self.pixmap().width() / 2, self.pixmap().height() / 2)
+    
+    def distanceTo(self, item):
+        line = QLineF(self.pos(), item.pos())
+
+        return line.length()
