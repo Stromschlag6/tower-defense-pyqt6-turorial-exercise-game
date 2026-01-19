@@ -59,7 +59,7 @@ class Tower(QGraphicsPixmapItem, QObject):
         closest_dist = 400
         closest_point = None
 
-        # all positions are being aimad at top left of respective objects, need to be centered
+        # determine closest enemy
         for object in colliding_items:
             if type(object) == Enemy:
                 this_distance = self.distanceTo(object)
@@ -68,8 +68,10 @@ class Tower(QGraphicsPixmapItem, QObject):
                     closest_point = QPointF(object.pos().x() + object.pixmap().width() / 2, object.pos().y() + object.pixmap().height() / 2)
                     self.has_target = True
                     self.attack_dest = self.mapFromScene(closest_point)
-                
-                self.fire()
+
+        if self.has_target:        
+            self.fire()
+            self.has_target = False
         
     def findXYCenter(self):
         return QPointF(self.pixmap().width() / 2, self.pixmap().height() / 2)
