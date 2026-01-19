@@ -1,26 +1,15 @@
-from PyQt6.QtCore import Qt, QObject, QTimer, QLineF
-from PyQt6.QtWidgets import QGraphicsPixmapItem
+from PyQt6.QtCore import Qt, QLineF
 from PyQt6.QtGui import QPixmap
+from bullet import Bullet
 from enemy import Enemy
 import math
 
-class Bullet(QGraphicsPixmapItem, QObject):
+class Missile(Bullet):
     def __init__(self, game, tower):
         super().__init__()
-
-        self.setPixmap(QPixmap(":/images/images/laser_shot.png").scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio))
-        self.damage = 1
-        self.game = game
-        self.tower = tower
-
-        self.max_range = 300
-        self.distance_traveled = 0
-        self.origin = self.mapToScene(self.tower.pos())
-
-        self.timer = QTimer()
-
-        self.timer.timeout.connect(self.move)
-        self.timer.start(50)
+        
+        self.setPixmap(QPixmap(":/images/images/missile.png").scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio))
+        self.damage = 2
 
     def move(self):
         self.distance_traveled = QLineF(self.origin, self.pos()).length()
@@ -45,7 +34,7 @@ class Bullet(QGraphicsPixmapItem, QObject):
 
             return
                     
-        step_size = 30
+        step_size = 10
         angle = self.rotation() # degrees
         radians = math.radians(angle)
         dx = step_size * math.cos(radians)

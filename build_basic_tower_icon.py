@@ -5,7 +5,7 @@ from basic_tower import BasicTower
 
 
 class BuildBasicTowerIcon(QGraphicsPixmapItem):
-    def __init__(self, game = None, parent = None):
+    def __init__(self, game, parent = None):
         super().__init__(parent)
 
         self.setPixmap(QPixmap(":/images/images/basic_tower_build_icon.png").scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio))
@@ -15,6 +15,6 @@ class BuildBasicTowerIcon(QGraphicsPixmapItem):
 
     def mousePressEvent(self, event):
         if not self.game.build:
-            self.game.build = BasicTower()
+            self.game.build = BasicTower(self.game)
             self.game.setCursor(":/images/images/basic_tower.png")
 

@@ -1,6 +1,6 @@
 from PyQt6.QtCore import Qt, QTimer, QPointF, QLineF
 from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsPixmapItem, QGraphicsLineItem
-from PyQt6.QtGui import QPixmap, QPen
+from PyQt6.QtGui import QPixmap, QPen, QCursor
 from tower import Tower
 from enemy import Enemy
 from build_basic_tower_icon import BuildBasicTowerIcon
@@ -41,7 +41,7 @@ class Game(QGraphicsView):
         self.timer = QTimer()
         self.enemies_spawned = None
         self.max_number_of_enemies = None
-        self.points_to_follow = [QPointF(800, 0), QPointF(450, 450), QPointF(0, 300)]
+        self.points_to_follow = [QPointF(800, 0), QPointF(600, 200), QPointF(600, 400), QPointF(250, 400), QPointF(100, 150), QPointF(50, 450), QPointF(400, 200)]
         self.createEnemies(5)
 
         # create road
@@ -59,6 +59,7 @@ class Game(QGraphicsView):
 
         self.cursor = QGraphicsPixmapItem()
         self.cursor.setPixmap(QPixmap(filename).scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio))
+        self.cursor.setPos(self.mapFromGlobal(QPointF(QCursor.pos().toPointF().x() - self.cursor.boundingRect().width() / 2, QCursor.pos().toPointF().y() - self.cursor.boundingRect().height() / 2)))
         self.gamescene.addItem(self.cursor)
 
     def createEnemies(self, number_of_enemies):

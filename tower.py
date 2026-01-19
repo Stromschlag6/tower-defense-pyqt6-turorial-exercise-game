@@ -6,10 +6,12 @@ from enemy import Enemy
 import res
 
 class Tower(QGraphicsPixmapItem, QObject):
-    def __init__(self, parent = None):
+    def __init__(self, game, parent = None):
         super().__init__(parent)
         # polygon position is dependent on pixmap sizeh(here scaled to 80) -> all towers inheriting from this class are required to have a pixmap the size of 80
         self.setPixmap(QPixmap(":/images/images/basic_tower.png").scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio))
+        
+        self.game = game
 
         self.attack_dest = QPointF()
         self.timer = QTimer()
@@ -43,14 +45,15 @@ class Tower(QGraphicsPixmapItem, QObject):
     def fire(self):
         """ Reference(here actually parent) in this case actually working, because tower also QGraphicsItem, as of my understanding now same classes or classes with same parent can take each other as children
         (of course just one the other) """
-        bullet = Bullet(self)
-        bullet.setPos(self.findXYCenter().x() - bullet.pixmap().width() / 2, self.findXYCenter().y() - bullet.pixmap().height() / 2)
+        bullet = Bullet(self.game, self)
+        bullet.setPos(self.mapToScene(self.findXYCenter().x() - bullet.pixmap().width() / 2, self.findXYCenter().y() - bullet.pixmap().height() / 2))
         bullet.setTransformOriginPoint(bullet.pixmap().width() / 2, bullet.pixmap().height() / 2) # rotation was the problem of not centered bullet
 
         line = QLineF(self.findXYCenter(), self.attack_dest)
         angle = -1 * line.angle()
 
         bullet.setRotation(angle)
+        self.game.gamescene.addItem(bullet)
 
     def aquireTarget(self):
         # get a list of all items colliding with attack_area
@@ -68,8 +71,7 @@ class Tower(QGraphicsPixmapItem, QObject):
                     closest_point = QPointF(object.pos().x() + object.pixmap().width() / 2, object.pos().y() + object.pixmap().height() / 2)
                     self.has_target = True
                     self.attack_dest = self.mapFromScene(closest_point)
-
-        if self.has_target:        
+        if self.has_target:
             self.fire()
             self.has_target = False
         

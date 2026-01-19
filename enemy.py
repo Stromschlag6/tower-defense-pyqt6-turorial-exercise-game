@@ -10,6 +10,9 @@ class Enemy(QGraphicsPixmapItem, QObject): # wrong order endes in weird bug, why
         # set graphics
         self.setPixmap(QPixmap(":/images/images/enemy.png").scaled(50, 50, Qt.AspectRatioMode.KeepAspectRatio))
 
+        # set health
+        self.health = 2
+
         # set points
         self.points = points_to_follow
         self.point_index = 0
