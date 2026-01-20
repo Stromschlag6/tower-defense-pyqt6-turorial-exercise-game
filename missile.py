@@ -6,7 +6,7 @@ import math
 
 class Missile(Bullet):
     def __init__(self, game, tower):
-        super().__init__()
+        super().__init__(game, tower)
         
         self.setPixmap(QPixmap(":/images/images/missile.png").scaled(40, 40, Qt.AspectRatioMode.KeepAspectRatio))
         self.damage = 2
